@@ -24,6 +24,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/hashicorp/vault/api"
 
 	"github.com/netflix/weep/pkg/logging"
 	"github.com/spf13/cobra"
@@ -44,6 +45,9 @@ func userLogin() (string, error) {
 	// Get environment variables
 	tenantID := os.Getenv("AZURE_TENANT_ID")
 	clientID := os.Getenv("AZURE_CLIENT_ID")
+	vaultAddress := os.Getenv("VAULT_ADDRESS") // Vault address, e.g., http://127.0.0.1:8200
+	vaultRole := os.Getenv("VAULT_ROLE")       // Vault role configured for Azure auth
+	vaultSecrets := os.Getenv("VAULT_SECRET")  // Vault path for certificates
 
 	if tenantID == "" || clientID == "" {
 		log.Fatalf("Environment variables AZURE_TENANT_ID, AZURE_CLIENT_ID must be set.")
@@ -68,6 +72,41 @@ func userLogin() (string, error) {
 
 	fmt.Printf("Successfully authenticated. Access Token")
 
+	//////////
+
+	// Authenticate with Vault using Azure auth method
+	vaultClient, err := api.NewClient(&api.Config{
+		Address: vaultAddress,
+	})
+	if err != nil {
+		log.Fatalf("Failed to create Vault client: %v", err)
+	}
+
+	// Construct login payload
+	authData := map[string]interface{}{
+		"role":            vaultRole,
+		"jwt":             token.Token,
+		"subscription_id": tenantID, // Add subscription_id if necessary for your configuration
+	}
+
+	// Login to Vault
+	secret, err := vaultClient.Logical().Write("auth/azure/login", authData)
+	if err != nil {
+		log.Fatalf("Failed to authenticate to Vault: %v", err)
+	}
+
+	// Set the client token
+	vaultClient.SetToken(secret.Auth.ClientToken)
+
+	// Retrieve secrets from Vault
+	secretData, err := vaultClient.Logical().Read(vaultSecrets)
+	if err != nil {
+		log.Fatalf("Failed to read secret from Vault: %v", err)
+	}
+
+	// Print the secrets
+	fmt.Printf("Retrieved secret: %v\n", secretData.Data)
+	//////////
 	return token.Token, nil
 }
 
