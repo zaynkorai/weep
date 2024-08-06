@@ -1,12 +1,15 @@
 module github.com/netflix/weep
 
-go 1.17
+go 1.21
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.12.0
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.7.0
 	github.com/aws/aws-sdk-go v1.40.39
 	github.com/bep/debounce v1.2.0
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gorilla/mux v1.8.0
+	github.com/hashicorp/vault/api v1.13.0
 	github.com/kardianos/service v1.2.0
 	github.com/lithammer/fuzzysearch v1.1.2
 	github.com/manifoldco/promptui v0.8.0
@@ -21,8 +24,6 @@ require (
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.12.0 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.7.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.9.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2 // indirect
 	github.com/cenkalti/backoff/v3 v3.0.0 // indirect
@@ -40,7 +41,6 @@ require (
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hashicorp/vault/api v1.14.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210706145210-9283cdf370b5 // indirect

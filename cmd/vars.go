@@ -107,8 +107,8 @@ also attempts to open the browser after generating the link. Use the --no-open f
 The supported resources match those that are supported by ConsoleMe. IAM roles, s3, sqs and sns resources open in the ConsoleMe editor, while other supported resources attempt to redirect to the AWS Console using the right role.
 `
 
-var loginShortHelp = "Log into User account"
-var loginLongHelp = `The login command log into User account and authenticate and after that fetchs token`
+var loginShortHelp = `Authenticate user with Azure Active Directory and get secrets from Vault`
+var loginLongHelp = `Authenticate user with Azure Active Directory and get secrets from Vault`
 
 var listShortHelp = "List available roles"
 var listLongHelp = `The list command prints out all of the roles you have access to via ConsoleMe. By default,
