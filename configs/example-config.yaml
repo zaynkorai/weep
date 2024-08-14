@@ -1,57 +1,36 @@
-consoleme_url: https://path_to_consoleme:port
+consoleme_url: https://console.sudoconsultants.com
 authentication_method: mtls # challenge or mtls
-log_level: info
-log_file: /path/to/log/file
-log_format: tty
-aws:
-  region: us-east-1
 server:
   http_timeout: 20
-  address: 127.0.0.1
-  port: 9091
-  enforce_imdsv2: false  # Enforce use of a token in IMDS emulation mode (weep serve <role>)
-service:
-  command: serve
-  flags:  # Flags are CLI options
-    - --log-level
-    - debug
-  args:  # Args are command arguments. This configuration will start the metadata service with credentials for roleName
-    - roleName
-swag: # Optionally use SWAG (https://github.com/Netflix-Skunkworks/swag-api) for AWS account information
-  enabled: false
-  use_mtls: false
-  url: https://swag.example.com/api
-#challenge_settings: # (Optional) Username can be provided. If it is not provided, user will be prompted on first authentication attempt
-#  user: you@example.com
+  port: 9099
+  metadata_port: 9090
+  ecs_credential_provider_port: 9091
+azure:
+  tenant_id: "848d8c2f-dd1b-4584-9611-159a328ca523"
+  client_id: "49b27df3-e1b1-4803-a96a-eaa12610d355"
+vault:
+  address: "https://44.192.61.55:8200"
+  role: "pki/issue/sudorole"
+  token: "root"
+challenge_settings: # (Optional) Username can be provided. If it is not provided, user will be prompted on first authentication attempt
+  user: zain@sudoconsultants.com
 mtls_settings: # only needed if authentication_method is mtls
   old_cert_message: mTLS certificate is too old, please run [refresh command]
-  certs:
-    - mtls1.crt
-    - mtls2.crt
-  keys:
-    - mtls1.key
-    - mtls2.key
+  ttl: "24h"
+  common_name: "sudoconsultants.com"
+  cert: mtls.crt
+  key: mtls.key
   catrust: mtlsCA.pem
   insecure: false
-  darwin: # weep will look in platform-specific directories for the three files specified above
-    - "/run/mtls/certificates"
-    - "/mtls/certificates"
-    - "$HOME/.mtls/certificates"
-    - "$HOME/.mtls"
   linux:
     - "/run/mtls/certificates"
     - "/mtls/certificates"
     - "$HOME/.mtls/certificates"
     - "$HOME/.mtls"
-  windows:
-    - "C:\\run\\mtls\\certificates"
-    - "C:\\mtls\\certificates"
-    - "$HOME\\.mtls\\certificates"
-    - "$HOME\\.mtls"
 metadata:
   routes:
     - path: latest/user-data
     - path: latest/meta-data/local-ipv4
       data: "127.0.0.1"
     - path: latest/meta-data/local-hostname
-      data: ip-127-0-0-1.us-west-2.compute.pkg
+      data: ip-127-0-0-1.us-west-2.compute.internal
